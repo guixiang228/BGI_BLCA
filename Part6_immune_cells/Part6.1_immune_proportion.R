@@ -55,3 +55,40 @@ p <- ggplot(percentage_by_domain_batch, aes(x = spatial_domain, y = percent, fil
     )
 print(p)
 dev.off()
+
+
+library(dplyr)
+library(tidyr)
+p_value_stars <- function(p) {
+  if (p < 0.001) {
+    return("***")
+  } else if (p < 0.01) {
+    return("**")
+  } else if (p < 0.05) {
+    return("*")
+  } else {
+    return("ns")  # non-significant
+  }
+}
+
+domains <- unique(percentage_by_domain_batch$spatial_domain)
+p_values <- data.frame(domain_pair = character(), p_value = numeric(), stars = character(), stringsAsFactors = FALSE)
+for (pair in combn(domains, 2, simplify = FALSE)) {
+  domain1 <- pair[1]
+  domain2 <- pair[2]
+  data_subset <- percentage_by_domain_batch %>%
+    filter(spatial_domain %in% c(domain1, domain2))
+  
+  #t test
+  t_test_result <- t.test(percent ~ spatial_domain, data = data_subset)
+  p_value_raw <- t_test_result$p.value
+  p_value_formatted <- format.pval(p_value_raw, digits = 4, format = "e")
+  star_rating <- p_value_stars(p_value_raw)
+  p_values <- rbind(p_values, data.frame(domain_pair = paste(domain1, domain2, sep = " vs "), 
+                                          p_value = p_value_formatted, 
+                                          stars = star_rating))
+}
+write.csv(p_values, "Tcell_p_values.csv", row.names = FALSE)
+
+
+
