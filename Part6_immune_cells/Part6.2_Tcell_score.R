@@ -80,3 +80,30 @@ for (score in score_list) {
     print(p)
     dev.off()
 }
+
+
+features <- c('CoStimulatory', 'Cytotoxic', 'Exhaustion', 'Inhibitory')
+all_p_values <- list()
+for (feature in features) {
+  if (feature %in% colnames(seurat_obj@meta.data)) {
+    x <- seurat_obj@meta.data
+    x$spatial_domain <- as.factor(x$spatial_domain)
+
+    # t test
+    formula <- as.formula(paste(feature, "~", "spatial_domain"))
+    stat.test <- t_test(x, formula)
+
+    group1 <- stat.test$group1
+    group2 <- stat.test$group2
+    p_values <- stat.test$p.adj
+
+    significance <- ifelse(p_values < 0.001, "****",
+                           ifelse(p_values < 0.01, "***",
+                                  ifelse(p_values < 0.05, "**",
+                                         ifelse(p_values < 0.1, "*", "ns"))))
+    p_value_df <- data.frame(Feature = feature, Group1 = group1, Group2 = group2, Significance = significance)
+    all_p_values[[feature]] <- p_value_df
+  }
+}
+combined_p_values <- do.call(rbind, all_p_values)
+write.csv(combined_p_values, "p_values_significance.csv", row.names = FALSE)
