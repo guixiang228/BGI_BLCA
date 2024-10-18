@@ -49,7 +49,7 @@ mycol <- c("#FF8C00", "#d5492f", "#683ec2", "#ede737", "#6d76cb",
 
     
 for (score in score_list) {
-    pdf(paste0('Mac_', '_', score, 'sixdomain_boxplot.pdf'), width = 10, height = 4)
+    pdf(paste0('Mac_', '_', score, 'domain_boxplot.pdf'), width = 10, height = 4)
 
     y_values <- seurat_obj@meta.data[[score]]
     lower_limit <- quantile(y_values, 0.05, na.rm = TRUE)
