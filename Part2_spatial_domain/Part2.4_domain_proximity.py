@@ -35,23 +35,23 @@ def calculate_proportion(adata):
     cell_indices = np.arange(len(adata))
     
     for region in adata.obs['region'].unique():
-        for fibsubtype in adata.obs['region'].unique():
+        for subtype in adata.obs['region'].unique():
             cells_in_region = cell_indices[adata.obs['region'] == region]
-            different_fibsubtype_count = 0
+            different_subtype_count = 0
             total_neighbors = 0
             
             for cell in cells_in_region:
                 start = connectivities.indptr[cell]
                 end = connectivities.indptr[cell + 1]
                 neighbors_of_cell = connectivities.indices[start:end]
-                neighbors_fibsubtype = adata.obs['region'].iloc[neighbors_of_cell]
-                proportion = (neighbors_fibsubtype == region).sum() / len(neighbors_of_cell)
+                neighbors_subtype = adata.obs['region'].iloc[neighbors_of_cell]
+                proportion = (neighbors_subtype == region).sum() / len(neighbors_of_cell)
                 if proportion < 0.5:
-                    different_fibsubtype_count += (neighbors_fibsubtype == fibsubtype).sum()
+                    different_subtype_count += (neighbors_subtype == subtype).sum()
                     total_neighbors += len(neighbors_of_cell)
                 
             if total_neighbors > 0:
-                result.at[region, fibsubtype] = different_fibsubtype_count / total_neighbors
+                result.at[region, subtype] = different_subtype_count / total_neighbors
     return result
 
 result_df = calculate_proportion(adata)
