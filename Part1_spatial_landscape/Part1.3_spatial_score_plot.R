@@ -318,7 +318,6 @@ seurat_spatialObj <- AddModuleScore(seurat_spatialObj,
 score_names <- c("Basal_score1", "Luminal_score1","P53_score1", "Squamous_score1", "Neuroendocrine_score1", "Cancerstem_score1", "EMT_score1", "Claudinlow_score1")
 
 
-# 重命名列名
 colnames(seurat_spatialObj@meta.data)[which(colnames(seurat_spatialObj@meta.data) == "Basal_score1")] <- "Basal"
 colnames(seurat_spatialObj@meta.data)[which(colnames(seurat_spatialObj@meta.data) == "Luminal_score1")] <- "Luminal"
 colnames(seurat_spatialObj@meta.data)[which(colnames(seurat_spatialObj@meta.data) == "P53_score1")] <- "P53"
