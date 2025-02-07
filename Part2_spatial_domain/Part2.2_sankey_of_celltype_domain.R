@@ -31,7 +31,7 @@ meta_data <- meta_data %>%
   mutate(annotated_cluster = as.character(annotated_cluster)) %>%
   filter(!is.na(annotated_cluster))
 
-# Calculate the number of different regions in each fibotype
+# Calculate the number of different celltypes in each domain
 counts <- meta_data %>%
   count(annotated_cluster, spatial_domain) %>%
   mutate(Weight = n)
