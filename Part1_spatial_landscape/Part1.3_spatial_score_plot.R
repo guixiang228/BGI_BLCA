@@ -1,5 +1,5 @@
 ################################################################################
-## script to pre analysis and QC for spatial data, to chose the fit combined bins
+## script to pre analysis and QC for spatial data, to choose the fit combined bins
 ################################################################################
 library(Seurat)
 library(dplyr)
